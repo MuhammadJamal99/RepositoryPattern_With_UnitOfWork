@@ -11,7 +11,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
                                                 ));
 
 //builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

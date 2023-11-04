@@ -7,7 +7,7 @@ public class UnitOfWork : IUnitOfWork
 {
     public IBaseRepository<Author> AuthorRepository { get; private set; }
 
-    public IBaseRepository<Book> BookRepository { get; private set; }
+    public IBookRepository BookRepository { get; private set; }
 
     private readonly ApplicationDbContext _context;
 
@@ -15,7 +15,7 @@ public class UnitOfWork : IUnitOfWork
     {
         _context = context;
         AuthorRepository = new BaseRepository<Author>(_context);
-        BookRepository = new BaseRepository<Book>(_context);
+        BookRepository = new BookRepository(_context);
     }
 
     public int Complete()

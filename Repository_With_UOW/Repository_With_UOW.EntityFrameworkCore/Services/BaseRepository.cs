@@ -79,9 +79,41 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         _context.Set<T>().Add(entity);
         return entity;
     }
+
     public List<T> AddRange(List<T> entities)
     {
         _context.Set<T>().AddRange(entities);
         return entities;
+    }
+
+    public T Update(T entity)
+    {
+        _context.Set<T>().Update(entity);
+        return entity;
+    }
+
+    public void Delete(T entity)
+    {
+        _context.Set<T>().Remove(entity);
+    }
+
+    public void DeleteRange(List<T> entities)
+    {
+        _context.Set<T>().RemoveRange(entities);
+    }
+
+    public void Attach(T entity)
+    {
+        _context.Set<T>().Attach(entity);
+    }
+
+    public int Count()
+    {
+        return _context.Set<T>().Count();
+    }
+
+    public int Count(Expression<Func<T, bool>> criteria)
+    {
+        return _context.Set<T>().Count(criteria);
     }
 }

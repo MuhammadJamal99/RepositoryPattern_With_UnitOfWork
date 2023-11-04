@@ -13,4 +13,10 @@ public interface IBaseRepository<T> where T : class
     List<T> FindAll(Expression<Func<T, bool>> criteria, int? skip, int? take, string[] includes = null, Expression<Func<T, object>> orderBy = null, string orderbyDirection = OrderBy.Asending);
     T Add(T entity);
     List<T> AddRange(List<T> entities);
+    T Update(T entity);
+    void Delete(T entity);
+    void DeleteRange(List<T> entities);
+    void Attach(T entity);
+    int Count();
+    int Count(Expression<Func<T, bool>> criteria);
 }
