@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
-using Repository_With_UOW.EntityFrameworkCore.Data;
+using Repository_With_UOW.Application.contracts.Interfaces;
+using Repository_With_UOW.EntityFrameworkCore.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -10,6 +10,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
                                                     builder.Configuration.GetConnectionString("DefaultConnection"),
                                                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)
                                                 ));
+
+builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddControllers();
 

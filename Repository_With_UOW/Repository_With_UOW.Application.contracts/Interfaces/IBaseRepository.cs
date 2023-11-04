@@ -1,0 +1,16 @@
+﻿using Repository_With_UOW.Application.contracts.Constants;
+using System.Linq.Expressions;
+namespace Repository_With_UOW.Application.contracts.Interfaces;
+public interface IBaseRepository<T> where T : class
+{
+    T GetById(Guid id);
+    Task<T> GetByIdAsync(Guid id);
+    List<T> GetAll();
+    Task<List<T>> GetAllAsync();
+    T Find(Expression<Func<T, bool>> match, string[] includes = null);
+    List<T> FindAll(Expression<Func<T, bool>> match, string[] includes = null);
+    List<T> FindAll(Expression<Func<T, bool>> match, int skip, int take, string[] includes = null);
+    List<T> FindAll(Expression<Func<T, bool>> match, int? skip, int? take, string[] includes = null, Expression<Func<T, object>> orderBy = null, string orderbyDirection = OrderBy.Asending);
+    T Add(T entity);
+    List<T> AddRange(List<T> entities);
+}

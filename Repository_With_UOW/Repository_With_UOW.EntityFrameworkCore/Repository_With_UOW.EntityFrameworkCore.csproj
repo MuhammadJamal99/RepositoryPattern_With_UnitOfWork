@@ -15,4 +15,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Repository_With_UOW.Application.contracts\Repository_With_UOW.Application.contracts.csproj" />
+  </ItemGroup>
+
 </Project>
