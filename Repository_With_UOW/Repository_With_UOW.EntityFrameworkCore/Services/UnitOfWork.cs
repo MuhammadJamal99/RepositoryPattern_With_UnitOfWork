@@ -6,8 +6,11 @@ namespace Repository_With_UOW.EntityFrameworkCore.Services;
 public class UnitOfWork : IUnitOfWork
 {
     public IBaseRepository<Author> AuthorRepository { get; private set; }
+
     public IBaseRepository<Book> BookRepository { get; private set; }
+
     private readonly ApplicationDbContext _context;
+
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;

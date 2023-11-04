@@ -7,65 +7,68 @@ namespace Repository_With_UOW.API.Controllers;
 [ApiController]
 public class BooksController : ControllerBase
 {
-    private readonly IBaseRepository<Book> _bookRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public BooksController(IBaseRepository<Book> bookRepository)
+    public BooksController(IUnitOfWork unitOfWork)
     {
-        _bookRepository = bookRepository;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpGet]
     public IActionResult GetByID(Guid id)
     {
-        return Ok(_bookRepository.GetById(id));
+        return Ok(_unitOfWork.BookRepository.GetById(id));
     }
 
     [HttpGet("GetByIdAsync")]
     public async Task<IActionResult> GetByIdAsync(Guid id)
     {
-        return Ok(await _bookRepository?.GetByIdAsync(id));
+        return Ok(await _unitOfWork.BookRepository?.GetByIdAsync(id));
     }
 
     [HttpGet("GetAll")]
     public IActionResult GetAll()
     {
-        return Ok(_bookRepository.GetAll());
+        return Ok(_unitOfWork.BookRepository.GetAll());
     }
 
     [HttpGet("GetAllAsync")]
     public async Task<IActionResult> GetAllAsync()
     {
-        return Ok(await _bookRepository.GetAllAsync());
+        return Ok(await _unitOfWork.BookRepository.GetAllAsync());
     }
 
     [HttpGet("GetByTitle")]
     public IActionResult GetByName(string title)
     {
-        return Ok(_bookRepository.Find(b => b.Title == title, new[] { "Author" }));
+        return Ok(_unitOfWork.BookRepository.Find(b => b.Title == title, new[] { "Author" }));
     }
 
     [HttpGet("GetAllByAuthorName")]
     public IActionResult GetAllByAuthorName(string authorName)
     {
-        return Ok(_bookRepository.FindAll(b => b.Author.Name == authorName, new[] { "Author" }));
+        return Ok(_unitOfWork.BookRepository.FindAll(b => b.Author.Name == authorName, new[] { "Author" }));
     }
 
     [HttpGet("GetAllOrderedBy")]
     public IActionResult GetAllOrderedBy(string authorName)
     {
-        return Ok(_bookRepository.FindAll(b => b.Author.Name == authorName, null, null, new[] { "Author" }, b => b.Title, OrderBy.Descending));
+        return Ok(_unitOfWork.BookRepository.FindAll(b => b.Author.Name == authorName, null, null, new[] { "Author" }, b => b.Title, OrderBy.Descending));
     }
 
     [HttpPost("AddOne")]
     public IActionResult AddOne(CreateBookDto book)
     {
-        return Ok(_bookRepository.Add(new Book()
+        Book entity = _unitOfWork.BookRepository.Add(new Book()
         {
             AuthorId = book.AuthorId,
             Title = book.Title,
             Id = book.Id,
             CreatedAt = DateTime.UtcNow
-        }));
+        });
+        _unitOfWork.Complete();
+
+        return Ok(entity);
     }
 
     [HttpPost("AddRange")]
@@ -79,6 +82,10 @@ public class BooksController : ControllerBase
             CreatedAt = DateTime.UtcNow
         }).ToList();
 
-        return Ok(_bookRepository.AddRange(books));
+        List<Book> entities = _unitOfWork.BookRepository.AddRange(books);
+
+        _unitOfWork.Complete();
+
+        return Ok(entities);
     }
 }

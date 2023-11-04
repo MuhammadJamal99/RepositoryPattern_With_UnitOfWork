@@ -21,7 +21,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public async Task<List<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
 
-    public T Find(Expression<Func<T, bool>> match, string[] includes = null)
+    public T Find(Expression<Func<T, bool>> criteria, string[] includes = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -29,10 +29,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             foreach (string include in includes)
                 query = query.Include(include);
 
-        return _context.Set<T>().SingleOrDefault(match);
+        return _context.Set<T>().SingleOrDefault(criteria);
     }
 
-    public List<T> FindAll(Expression<Func<T, bool>> match, string[] includes = null)
+    public List<T> FindAll(Expression<Func<T, bool>> criteria, string[] includes = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -40,10 +40,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             foreach (string include in includes)
                 query = query.Include(include);
 
-        return _context.Set<T>().Where(match).ToList();
+        return _context.Set<T>().Where(criteria).ToList();
     }
 
-    public List<T> FindAll(Expression<Func<T, bool>> match, int skip, int take, string[] includes = null)
+    public List<T> FindAll(Expression<Func<T, bool>> criteria, int skip, int take, string[] includes = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -51,10 +51,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             foreach (string include in includes)
                 query = query.Include(include);
 
-        return _context.Set<T>().Where(match).Skip(skip).Take(take).ToList();
+        return _context.Set<T>().Where(criteria).Skip(skip).Take(take).ToList();
     }
 
-    public List<T> FindAll(Expression<Func<T, bool>> match, int? skip, int? take, string[] includes = null, Expression<Func<T, object>> orderBy = null, string orderbyDirection = OrderBy.Asending)
+    public List<T> FindAll(Expression<Func<T, bool>> criteria, int? skip, int? take, string[] includes = null, Expression<Func<T, object>> orderBy = null, string orderbyDirection = OrderBy.Asending)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -62,7 +62,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             foreach (string include in includes)
                 query = query.Include(include);
 
-        query = query.Where(match);
+        query = query.Where(criteria);
 
         query = skip.HasValue ? query.Skip(skip.Value) : query;
 
@@ -77,13 +77,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public T Add(T entity)
     {
         _context.Set<T>().Add(entity);
-        _context.SaveChanges();
         return entity;
     }
     public List<T> AddRange(List<T> entities)
     {
         _context.Set<T>().AddRange(entities);
-        _context.SaveChanges();
         return entities;
     }
 }
